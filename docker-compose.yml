@@ -1,0 +1,37 @@
+version: '3.1'
+services:
+  node:
+    image: 'node:8'
+    user: node
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - '.:/home/node/app'
+    expose:
+      - '3000'
+      - '9229'
+    ports:
+      - '3000:3000'
+      - '9229:9229'
+    command: npm start
+    network_mode: host
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    expose:
+      - '27017'
+    network_mode: host
+  mongo-express:
+    image: 'mongo-express:latest'
+    depends_on:
+      - mongo
+    volumes: []
+    network_mode: host
+    ports:
+      - '8081:8081'
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=127.0.0.1
